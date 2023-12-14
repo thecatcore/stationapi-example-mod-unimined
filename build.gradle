@@ -1,20 +1,20 @@
 plugins {
-	id 'babric-loom' version '1.4.2'
+	id 'java'
+	id 'xyz.wagyourtail.unimined' version '1.1.1-SNAPSHOT'
 	id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
 
-archivesBaseName = project.archives_base_name
+base {
+	archivesName = project.archives_base_name
+}
+
 version = project.mod_version
 group = project.maven_group
-
-loom {
-	gluedMinecraftJar()
-	customMinecraftManifest.set("https://babric.github.io/manifest-polyfill/${minecraft_version}.json")
-	intermediaryUrl.set("https://maven.glass-launcher.net/babric/babric/intermediary/%1\$s/intermediary-%1\$s-v2.jar")
-}
 
 repositories {
 	// Add repositories to retrieve artifacts from in here.
@@ -23,16 +23,6 @@ repositories {
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
 
-	// Used for the fabric toolchain in this project.
-	maven {
-		name = 'Babric'
-		url = 'https://maven.glass-launcher.net/babric'
-	}
-	// Used for mappings.
-	maven {
-		name = 'Glass Releases'
-		url = 'https://maven.glass-launcher.net/releases'
-	}
 	// Used for StationAPI and HowManyItems.
 	maven {
 		name = 'Glass Snapshots'
@@ -63,16 +53,31 @@ repositories {
 	mavenCentral()
 }
 
+unimined.minecraft {
+	version project.minecraft_version
+
+	babric {
+		loader project.loader_version
+	}
+
+	mappings {
+		biny(project.yarn_mappings)
+	}
+
+	minecraftRemapper.config {
+		ignoreConflicts(true)
+	}
+}
+
 dependencies {
 	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.glasslauncher:biny:${project.yarn_mappings}:v2"
-	modImplementation "babric:fabric-loader:${project.loader_version}"
-
 	implementation "org.slf4j:slf4j-api:1.8.0-beta4"
 	implementation 'org.apache.logging.log4j:log4j-slf4j18-impl:2.17.2'
 
 	modImplementation "net.modificationstation:StationAPI:${project.stapi_version}"
+
+	// You can also get individual StationAPI modules this way
+	// modImplementation(fabricApi.stationModule("station-achievements-v0", project.stapi_version))
 
 	// Optional, but convenient mods for mod creators and users alike.
 	modImplementation("com.github.calmilamsy:ModMenu:${project.modmenu_version}") {
