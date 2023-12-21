@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'xyz.wagyourtail.unimined' version '1.1.1-SNAPSHOT'
+	id 'xyz.wagyourtail.unimined' version '1.1.2-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -77,7 +77,7 @@ dependencies {
 	modImplementation "net.modificationstation:StationAPI:${project.stapi_version}"
 
 	// You can also get individual StationAPI modules this way
-	// modImplementation(fabricApi.stationModule("station-achievements-v0", project.stapi_version))
+	// modImplementation(fabricApi.stationModule("releases", "station-achievements-v0", project.stapi_version))
 
 	// Optional, but convenient mods for mod creators and users alike.
 	modImplementation("com.github.calmilamsy:ModMenu:${project.modmenu_version}") {
